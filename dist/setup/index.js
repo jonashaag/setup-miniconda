@@ -13163,15 +13163,6 @@ function applyCondaConfiguration(inputs, options) {
                 core.warning(err);
             }
         }
-        // Disable conflict reports (conda only; mamba keeps them)
-        if (!inputs.useMamba) {
-            try {
-                yield condaCommand(["config", "--set", "unsatisfiable_hints", "false"], options);
-            }
-            catch (err) {
-                core.warning(err);
-            }
-        }
         // Log all configuration information
         yield condaCommand(["config", "--show-sources"], options);
         yield condaCommand(["config", "--show"], options);
@@ -13653,6 +13644,8 @@ function parseInputs() {
                 // These are always set to avoid terminal issues
                 always_yes: "true",
                 changeps1: "false",
+                // Disable conflict reports (conda only; mamba keeps them)
+                unsatisfiable_hints: core.getInput("use-mamba"),
             }),
             cleanPatchedEnvironmentFile: core.getInput("clean-patched-environment-file"),
         });
